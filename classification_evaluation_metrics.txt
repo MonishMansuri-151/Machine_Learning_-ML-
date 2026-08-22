@@ -1,0 +1,27 @@
+Classification Evaluation Metrics — Simple English
+
+| Metric | What is it? | Formula | Why use it? | When to use it? |
+|---|---|---|---|---|
+| Accuracy ⭐ | How many total predictions are correct | (TP + TN) / (TP + TN + FP + FN) | To check overall correctness | When classes are balanced |
+| Precision ⭐ | Out of all predicted Positive cases, how many are actually Positive | TP / (TP + FP) | To reduce False Positives | When a False Positive is costly |
+| Recall ⭐ | Out of all actual Positive cases, how many are correctly found | TP / (TP + FN) | To reduce False Negatives | When missing a Positive case is dangerous/costly |
+| F1-Score ⭐ | A balance between Precision and Recall | 2 × (Precision × Recall) / (Precision + Recall) | To consider Precision and Recall together | When FP and FN both matter, especially with imbalanced data |
+| Specificity | Out of all actual Negative cases, how many are correctly identified | TN / (TN + FP) | To correctly identify Negative cases | When correctly identifying Negative cases is important |
+| Confusion Matrix ⭐ | A table showing TP, TN, FP and FN | No single formula | To understand what type of mistakes the model makes | Useful for almost every classification problem |
+| ROC-AUC | Shows how well the model separates Positive and Negative classes | Area under ROC Curve | To compare classification/separation ability | When comparing models or different thresholds |
+
+Easy Memory
+
+How many predictions are correct overall? → Accuracy
+Are my Positive predictions actually correct? → Precision
+Did I find most actual Positive cases? → Recall
+Do I need a balance between Precision and Recall? → F1-Score
+Did I correctly identify Negative cases? → Specificity
+What mistakes is my model making? → Confusion Matrix
+How well does my model separate the classes? → ROC-AUC
+
+Important:
+FP = False Positive → predicted Positive, but actually Negative
+FN = False Negative → predicted Negative, but actually Positive
+TP = True Positive → correctly predicted Positive
+TN = True Negative → correctly predicted Negative
