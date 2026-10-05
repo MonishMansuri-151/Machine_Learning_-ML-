@@ -1,0 +1,624 @@
+# PCA — Principal Component Analysis
+
+## 1. What is PCA?
+
+PCA stands for **Principal Component Analysis**.
+
+PCA is an **unsupervised dimensionality reduction technique**.
+
+Simple meaning:
+
+> PCA ka use **zyada features ko kam features mein convert** karne ke liye hota hai, while keeping maximum important information.
+
+Example:
+
+```text
+100 Features
+     ↓ PCA
+20 Components
+```
+
+---
+
+## 2. Why do we use PCA?
+
+PCA use karte hain:
+
+* Jab features bahut zyada ho.
+* Jab features highly correlated ho.
+* Data ko visualize karna ho.
+* Model training ko faster karna ho.
+* Redundant information ko reduce karna ho.
+* Data ka compact representation chahiye ho.
+
+---
+
+## 3. When should we use PCA?
+
+PCA use kar sakte hain jab:
+
+```text
+High number of features
+        +
+Redundant/Correlated features
+        +
+Dimensionality problem
+```
+
+Example:
+
+```text
+500 features → PCA → 50 components
+```
+
+---
+
+## 4. When should we NOT use PCA?
+
+PCA avoid/carefully use karo when:
+
+* Features already very few hain.
+* Original features ki interpretation important hai.
+* Business ko exact feature importance samajhna hai.
+* PCA se model performance improve nahi ho rahi.
+
+Example:
+
+```text
+Age
+Salary
+Experience
+```
+
+Sirf 3 features hain → PCA ki usually zarurat nahi.
+
+---
+
+# 5. PCA internally kaise work karta hai?
+
+PCA ka basic flow:
+
+```text
+Data
+ ↓
+Scaling
+ ↓
+Covariance Matrix
+ ↓
+Eigenvectors + Eigenvalues
+ ↓
+Principal Components
+ ↓
+Important Components Select
+ ↓
+Reduced Data
+```
+
+---
+
+# 6. Covariance kya hota hai?
+
+Covariance batata hai ki **2 features ek saath kaise change karte hain.**
+
+### Positive covariance
+
+```text
+X ↑ → Y ↑
+```
+
+Dono saath increase.
+
+### Negative covariance
+
+```text
+X ↑ → Y ↓
+```
+
+Ek increase, doosra decrease.
+
+### Simple interview answer:
+
+> Covariance tells us how two variables change together.
+
+---
+
+# 7. Covariance Matrix kya hai?
+
+Covariance matrix mein features ke:
+
+* Variance
+* Covariance
+
+ki information hoti hai.
+
+Example:
+
+```text
+        Age   Salary
+Age     Var   Cov
+Salary  Cov   Var
+```
+
+Important:
+
+> Diagonal values = Variance
+
+> Off-diagonal values = Covariance
+
+---
+
+# 8. Eigenvector kya hai?
+
+Simple meaning:
+
+> **Eigenvector = Direction**
+
+PCA mein eigenvector batata hai ki data kis direction mein spread ho raha hai.
+
+Example:
+
+```text
+      /
+    /
+  /
+ /
+```
+
+Ye direction ek principal direction ho sakti hai.
+
+### Interview answer:
+
+> Eigenvectors represent the principal directions of the data.
+
+---
+
+# 9. Eigenvalue kya hai?
+
+Simple meaning:
+
+> **Eigenvalue = us direction mein kitni variance/information hai.**
+
+Example:
+
+```text
+PC1 → Eigenvalue = 8
+PC2 → Eigenvalue = 2
+```
+
+Total = 10
+
+So:
+
+```text
+PC1 = 80% variance
+PC2 = 20% variance
+```
+
+### Interview answer:
+
+> Eigenvalues tell us how much variance is captured by each principal component.
+
+---
+
+# 10. Easy trick to remember
+
+```text
+Eigenvector → Direction
+Eigenvalue  → Variance
+```
+
+Or:
+
+> **Vector = Where?**
+
+> **Value = How much?**
+
+---
+
+# 11. Principal Component kya hai?
+
+Principal Component ek **new feature** hota hai jo original features ka combination hota hai.
+
+Example:
+
+```text
+PC1 = 0.5 Age + 0.6 Salary + 0.3 Experience
+```
+
+PC1 koi original feature nahi hai.
+
+It is a **new transformed feature**.
+
+---
+
+# 12. PC1, PC2 kya hote hain?
+
+### PC1
+
+Data ki **maximum variance** wali direction.
+
+### PC2
+
+PC1 ke perpendicular **next maximum variance** wali direction.
+
+```text
+PC1 → Maximum variance
+PC2 → Second maximum variance
+PC3 → Third maximum variance
+```
+
+---
+
+# 13. PCA mein Scaling kyun karte hain?
+
+PCA variance par based hai.
+
+Agar features ka scale bahut different hai:
+
+```text
+Age       = 20–60
+Salary    = 20,000–500,000
+```
+
+Salary PCA ko dominate kar sakti hai.
+
+Isliye usually:
+
+```text
+Scaling
+   ↓
+PCA
+```
+
+Use karte hain.
+
+Common method:
+
+```python
+StandardScaler()
+```
+
+---
+
+# 14. Number of Components kaise decide karein?
+
+Mostly **explained variance** dekhte hain.
+
+Example:
+
+```text
+PC1 = 50%
+PC2 = 25%
+PC3 = 15%
+PC4 = 5%
+PC5 = 5%
+```
+
+Cumulative:
+
+```text
+PC1           = 50%
+PC1 + PC2     = 75%
+PC1 + PC2+PC3 = 90%
+```
+
+Agar target = **90% variance**
+
+Then:
+
+> **3 components choose karenge.**
+
+---
+
+# 15. `n_components=0.95` ka meaning
+
+```python
+PCA(n_components=0.95)
+```
+
+Meaning:
+
+> PCA automatically minimum number of components choose karega jo approximately **95% variance retain** kare.
+
+---
+
+# 16. Explained Variance kya hai?
+
+Explained variance batati hai:
+
+> Har principal component data ki kitni variance/information explain kar raha hai.
+
+Example:
+
+```text
+PC1 → 60%
+PC2 → 20%
+PC3 → 10%
+```
+
+Meaning:
+
+```text
+PC1 = most information
+PC2 = second most
+PC3 = third most
+```
+
+---
+
+# 17. Important Interview Question
+
+### Q: 95% explained variance ka matlab 95% accuracy hai?
+
+**Answer: No.**
+
+95% explained variance means:
+
+> PCA ne original data ki approximately 95% variance retain ki hai.
+
+It does **not** mean model ki accuracy 95% hogi.
+
+---
+
+# 18. PCA vs Feature Selection
+
+### Feature Selection
+
+Original features mein se kuch features select karte hain.
+
+```text
+Age
+Salary
+BMI
+Experience
+ ↓
+Age
+BMI
+```
+
+### PCA
+
+New features/components create karta hai.
+
+```text
+Age
+Salary
+BMI
+Experience
+ ↓ PCA
+PC1
+PC2
+```
+
+### Main difference:
+
+> Feature Selection → Original features
+
+> PCA → New features
+
+---
+
+# 19. PCA supervised hai ya unsupervised?
+
+**PCA is an unsupervised technique.**
+
+PCA ko target variable `y` ki zarurat nahi hoti.
+
+It mainly looks at the structure/variance of `X`.
+
+---
+
+# 20. PCA + ML correct order
+
+```text
+Train/Test Split
+       ↓
+Scaling
+       ↓
+PCA
+       ↓
+ML Model
+```
+
+Better practice:
+
+```python
+Pipeline([
+    ("scaler", StandardScaler()),
+    ("pca", PCA(n_components=0.95)),
+    ("model", LogisticRegression())
+])
+```
+
+---
+
+# 21. Data Leakage in PCA
+
+Wrong:
+
+```text
+Scaler.fit_transform(full_data)
+PCA.fit_transform(full_data)
+Train/Test Split
+```
+
+Why wrong?
+
+Test data ki information training process mein chali gayi.
+
+Correct:
+
+```text
+Split Data
+   ↓
+Fit Scaler on Train
+   ↓
+Transform Train + Test
+   ↓
+Fit PCA on Train
+   ↓
+Transform Train + Test
+```
+
+### Interview line:
+
+> Preprocessing steps like scaling and PCA should be fitted only on training data.
+
+---
+
+# 22. PCA ke Advantages
+
+* Dimensionality reduce karta hai.
+* Training time reduce ho sakta hai.
+* Correlated features ko handle kar sakta hai.
+* Visualization mein useful.
+* Redundant information reduce kar sakta hai.
+* Data ko compact bana sakta hai.
+
+---
+
+# 23. PCA ke Disadvantages
+
+* Original feature meaning lose ho sakta hai.
+* Interpretability reduce hoti hai.
+* Kuch information lose hoti hai.
+* Scaling important ho sakti hai.
+* Har dataset mein model performance improve nahi karta.
+* PCA ko blindly apply nahi karna chahiye.
+
+---
+
+# 24. Scenario-Based Interview Questions
+
+### Scenario 1
+
+**500 features hain aur many features correlated hain. PCA use karoge?**
+
+Yes, PCA is a good candidate because it can reduce dimensions and redundancy.
+
+---
+
+### Scenario 2
+
+**Sirf 3 important features hain. PCA use karoge?**
+
+Usually no, because dimensionality already low hai.
+
+---
+
+### Scenario 3
+
+**100 features ko 2D graph mein visualize karna hai.**
+
+PCA useful hai:
+
+```text
+100 features → PCA → 2 components
+```
+
+---
+
+### Scenario 4
+
+**Doctor ko exact feature importance samajhni hai. PCA use karoge?**
+
+Carefully. PCA interpretability reduce karta hai, so feature-level interpretation important ho to PCA avoid karna better ho sakta hai.
+
+---
+
+### Scenario 5
+
+**PCA ke baad accuracy 95% se 85% ho gayi.**
+
+Immediately PCA remove nahi karenge.
+
+Check:
+
+* Kitni variance retain hui?
+* Kitne components use hue?
+* Cross-validation result kya hai?
+* PCA ka purpose kya tha?
+* Training time kitna reduce hua?
+
+---
+
+# 25. Most Important Interview Questions
+
+Ye questions pakke prepare karo:
+
+1. What is PCA?
+2. Why do we use PCA?
+3. When should we use PCA?
+4. When should we avoid PCA?
+5. PCA supervised or unsupervised?
+6. What is covariance?
+7. What is covariance matrix?
+8. What is eigenvector?
+9. What is eigenvalue?
+10. What is a principal component?
+11. What is PC1?
+12. Why is scaling important before PCA?
+13. How do you decide number of components?
+14. What is explained variance?
+15. Does 95% explained variance mean 95% accuracy?
+16. PCA vs feature selection?
+17. How can PCA cause data leakage?
+18. What are advantages of PCA?
+19. What are disadvantages of PCA?
+20. How do you implement PCA in Python?
+
+---
+
+# 26. One-Minute PCA Revision
+
+Agar interview se just pehle revise karna ho:
+
+> **PCA is an unsupervised dimensionality reduction technique. It converts many correlated/original features into fewer new features called principal components.**
+
+> **Covariance tells how features change together.**
+
+> **Eigenvector gives the direction.**
+
+> **Eigenvalue tells the amount of variance in that direction.**
+
+> **PC1 captures maximum variance, PC2 captures the next maximum variance, and so on.**
+
+> **We usually scale the data before PCA.**
+
+> **Number of components is commonly selected using cumulative explained variance, such as 90%, 95%, or 99%.**
+
+> **PCA reduces dimensions but can reduce interpretability because new components are combinations of original features.**
+
+> **For ML, fit the scaler and PCA only on training data to avoid data leakage.**
+
+### ⭐ Final memory trick
+
+```text
+PCA
+ ↓
+Reduce Dimensions
+
+Covariance
+ ↓
+Relationship
+
+Eigenvector
+ ↓
+Direction
+
+Eigenvalue
+ ↓
+Variance
+
+PC1
+ ↓
+Maximum Variance
+
+Explained Variance
+ ↓
+How many Components?
+
+Scaling
+ ↓
+Usually before PCA
+```
